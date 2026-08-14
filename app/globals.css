@@ -1,26 +1,106 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .font-impact {
+    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  }
+  .font-yi-baiti {
+    font-family: "Microsoft Yi Baiti", "Yi Baiti", "Segoe UI", system-ui, sans-serif;
   }
 }
 
+:root {
+  --bg-radial: radial-gradient(circle at 50% 50%, #0f0f0f 0%, #0a0a0a 55%, #060606 100%);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-radial);
+  color: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: "Microsoft Yi Baiti", "Yi Baiti", "Segoe UI", sans-serif;
+}
+
+/* Animations for components appearing from outside simultaneously */
+@keyframes slideFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-component-top {
+  animation: slideFromTop 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-component-left {
+  animation: slideFromLeft 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-component-right {
+  animation: slideFromRight 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Header brand marks (cuvbe.png + logo-name.png).
+   Both PNGs are white artwork on a transparent background, so `drop-shadow`
+   is used rather than `box-shadow`: it follows the alpha channel and traces
+   the actual letterforms/edges instead of glowing a rectangle around them.
+   Two stacked shadows give a tight core plus a softer bloom.
+
+   The hover is keyed off `.brand-group` (not Tailwind's generic `.group`)
+   so it can never be triggered by the other unrelated `group` containers
+   elsewhere in the app — hovering either mark lights up both. */
+.brand-mark {
+  transition: filter 0.3s ease;
+}
+
+.brand-group:hover .brand-mark {
+  filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.5))
+    drop-shadow(0 0 12px rgba(239, 68, 68, 0.28));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark {
+    transition: none;
+  }
+}
+
+/* Red container frame */
+.red-container-box {
+  border: 1px solid rgba(185, 28, 28, 0.65);
+  box-shadow: 0 0 20px rgba(185, 28, 28, 0.12), inset 0 0 15px rgba(185, 28, 28, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.red-container-box:hover {
+  border-color: rgba(239, 68, 68, 0.85);
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
 }

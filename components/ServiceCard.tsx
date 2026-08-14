@@ -1,0 +1,101 @@
+"use client";
+
+import Image from "next/image";
+
+export interface ServiceCardProps {
+  number: string;
+  title: string;
+  description: string;
+  subheading?: string;
+  frequentServices: string[];
+  imageSrc: string;
+  imageAlt?: string;
+}
+
+/**
+ * Visual markup for a single service panel.
+ *
+ * The `sc-*` class names below are animation hooks only (no styles attached
+ * to them) — ServiceCardsStack queries for them with GSAP, scoped to this
+ * panel, to drive the scroll-tied reveal/exit timelines. Renaming or
+ * removing them will silently break the animation.
+ */
+export default function ServiceCard({
+  number,
+  title,
+  description,
+  subheading = "Servicios más frecuentes:",
+  frequentServices,
+  imageSrc,
+  imageAlt,
+}: ServiceCardProps) {
+  const words = title.split(" ");
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-10 md:p-14 lg:p-16 select-none bg-[#060606] text-white">
+      <div className="sc-content w-full flex flex-col md:flex-row items-center md:items-stretch gap-8 md:gap-12 lg:gap-16 h-full max-h-[85vh]">
+        {/* Left Column: Narrow Tall Vertical Image Container */}
+        <div className="red-container-box relative w-full md:w-56 lg:w-64 xl:w-72 h-[380px] sm:h-[480px] md:h-full flex-shrink-0 group shadow-2xl overflow-hidden">
+          <div className="sc-image absolute inset-0 will-change-transform">
+            <Image
+              src={imageSrc}
+              alt={imageAlt || title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              priority
+            />
+          </div>
+          {/* Wipe overlay: covers the image, then slides up and out on reveal */}
+          <div className="sc-image-overlay absolute inset-0 bg-[#060606] will-change-transform" />
+        </div>
+
+        {/* Right Column: Title, Number, Description & Frequent Services */}
+        <div className="flex-1 min-w-0 flex flex-col justify-center py-2 overflow-hidden">
+          {/* Main Title - ALWAYS SINGLE LINE, word-by-word reveal */}
+          <h3 className="font-impact text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-[145px] text-white leading-none whitespace-nowrap min-w-0 tracking-tight mb-6 sm:mb-8 drop-shadow-2xl opacity-95">
+            {words.map((word, idx) => (
+              <span key={idx} className="inline-block overflow-hidden align-top">
+                <span className="sc-title-word inline-block will-change-transform">
+                  {word}
+                  {idx < words.length - 1 ? " " : ""}
+                </span>
+              </span>
+            ))}
+          </h3>
+
+          {/* Row: Big Number + Description Paragraph */}
+          <div className="flex items-start space-x-6 sm:space-x-10 mb-6 sm:mb-8">
+            {/* Huge Number */}
+            <span className="sc-number font-impact text-7xl sm:text-9xl md:text-[140px] lg:text-[180px] text-white leading-[0.8] select-none tracking-tighter opacity-95 flex-shrink-0 will-change-transform">
+              {number}
+            </span>
+
+            {/* Description Text */}
+            <p className="sc-description font-yi-baiti text-sm sm:text-base md:text-lg lg:text-[28px] text-gray-500 leading-snug max-w-2xl pt-2 sm:pt-4 will-change-transform">
+              {description}
+            </p>
+          </div>
+
+          {/* Subheading & Frequent Services List */}
+          {frequentServices && frequentServices.length > 0 && (
+            <div className="mt-2 ml-52">
+              <h4 className="sc-subheading font-impact text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white uppercase tracking-wider mb-4 will-change-transform">
+                {subheading}
+              </h4>
+
+              {/* List with Red Diamonds */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 font-yi-baiti text-sm sm:text-base md:text-lg text-gray-300">
+                {frequentServices.map((item, idx) => (
+                  <div key={idx} className="sc-bullet flex items-center space-x-2 will-change-transform">
+                    <span className="text-red-500 text-xs sm:text-sm">◆</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
