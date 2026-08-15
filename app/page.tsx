@@ -151,17 +151,6 @@ export default function Home() {
               SERVICIO MECÁNICO MULTIMARCA
             </h2>
 
-            {/* TL;DR — answers the search intent (what / where / for whom)
-                in the first lines, before the longer brand copy below. */}
-            <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
-              <span className="text-red-500 font-bold">TL;DR:</span> Taller
-              mecánico multimarca en Isla de Flores 1691, Palermo, Montevideo.
-              Inyección electrónica, diagnóstico computarizado, frenos,
-              alineación y balanceo, y cambio de aceite. Atendemos todos los
-              vehículos con motor a inyección electrónica.
-            </p>
-
-            <h3 className="sr-only">Sobre el taller</h3>
             <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-3">
               Tenemos mas de una decada de experiencia en el mercado,
               en autodiagnostico panjos,

@@ -13,7 +13,11 @@ import { phoneNumber, phoneDisplay, whatsappNumber, contactEmail } from "@/lib/s
 export default function MobileCallBar() {
   if (!phoneNumber) return null;
 
-  const hasWhatsapp = Boolean(whatsappNumber);
+  // wa.me only accepts digits — a leading "+" or any spacing produces a
+  // broken link. Normalise here so lib/site.ts can be filled in with
+  // whatever formatting reads best.
+  const waDigits = whatsappNumber.replace(/\D/g, "");
+  const hasWhatsapp = waDigits.length > 0;
 
   return (
     <>
@@ -38,7 +42,7 @@ export default function MobileCallBar() {
 
         {hasWhatsapp ? (
           <a
-            href={`https://wa.me/${whatsappNumber}`}
+            href={`https://wa.me/${waDigits}`}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Escribir por WhatsApp"

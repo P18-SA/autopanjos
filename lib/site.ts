@@ -21,13 +21,13 @@ export const siteUrl = "https://autopanjos.com";
  *
  * Format it exactly as it should be dialled, e.g. "+59899123456".
  */
-export const phoneNumber = "+59899291159";
+export const phoneNumber = "+59899334970";
 
 /** Human-readable version of `phoneNumber`, shown on screen. */
-export const phoneDisplay = "(+598) 99 291 159";
+export const phoneDisplay = "(+598) 99 334 970";
 
 /** WhatsApp number in wa.me format (digits only, no +). Optional. */
-export const whatsappNumber = "+59899291159";
+export const whatsappNumber = "+59899334970";
 
 export const contactEmail = "autopanjos@adinet.com.uy";
 

@@ -107,17 +107,6 @@ export default function ServiciosPage() {
               {/* <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
                 SERVICIO MECÁNICO MULTIMARCA
               </h2> */}
-              {/* TL;DR — the list of services up front, so the search intent
-                  ("what do they actually do?") is answered before scrolling
-                  through the animated card stack below. */}
-              <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
-                <span className="text-red-500 font-bold">TL;DR:</span> Inyección
-                electrónica (limpieza y cambio de inyectores, sensor de
-                oxígeno), diagnóstico computarizado, frenos, alineación y
-                balanceo, y cambio de aceite y filtros. Todas las marcas y
-                modelos, en Palermo, Montevideo.
-              </p>
-
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 Servicios de calidad garantizada para automotores de todas las marcas y modelos.
                 Ofrecemos una amplia gama de servicios para satisfacer las necesidades de nuestros clientes.

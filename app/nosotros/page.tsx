@@ -36,14 +36,6 @@ export default function ServiciosPage() {
                 MÁS DE UNA DÉCADA EN PALERMO
               </h2>
 
-              {/* TL;DR — who/where/what, before the longer description. */}
-              <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
-                <span className="text-red-500 font-bold">TL;DR:</span> Taller
-                mecánico multimarca con más de 10 años en Isla de Flores 1691,
-                Palermo, Montevideo, a pocas cuadras de la Intendencia.
-                Atendemos español, inglés y portugués. No contamos con remolque.
-              </p>
-
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 Mantenimiento y reparación integral de vehículos: cambio de aceite y filtro,
                 revisión de frenos, alineación y balanceo.
