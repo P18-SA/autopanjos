@@ -1,0 +1,42 @@
+# Autodiagnóstico Panjos
+
+> Taller mecánico multimarca en Palermo, Montevideo (Uruguay), con más de una
+> década de trayectoria. Reparación y mantenimiento de vehículos de todas las
+> marcas y modelos, con especialidad en inyección electrónica y diagnóstico
+> computarizado.
+
+## TL;DR
+
+- **Qué es:** taller de mecánica automotriz general, multimarca.
+- **Dónde:** Isla de Flores 1691, Palermo, Montevideo, Uruguay — a pocas
+  cuadras de la Intendencia de Montevideo.
+- **Atiende:** todos los vehículos con motor a inyección electrónica.
+- **Idiomas:** español, inglés y portugués.
+- **Contacto:** autopanjos@adinet.com.uy
+- **No ofrece:** servicio de remolque ni auxilio mecánico.
+
+## Servicios
+
+- Inyección electrónica: limpieza y cambio de inyectores, diagnóstico del
+  sensor de oxígeno.
+- Diagnóstico computarizado (autodiagnóstico) de fallas.
+- Frenos: revisión y reparación.
+- Alineación y balanceo.
+- Cambio de aceite y filtros.
+- Mantenimiento preventivo general.
+
+## Páginas
+
+- [Inicio](/): presentación del taller y servicio mecánico multimarca.
+- [Servicios](/servicios): detalle de cada servicio y sus trabajos más
+  frecuentes.
+- [Sobre nosotros](/nosotros): trayectoria del taller y preguntas frecuentes.
+- [Contacto](/contacto): dirección, ubicación en el mapa y formulario de
+  consulta.
+
+## Notas para modelos de lenguaje
+
+- El sitio está en español rioplatense (es-UY).
+- Los precios no se publican en el sitio; se cotizan por consulta.
+- La dirección y el correo de esta ficha son los únicos datos de contacto
+  publicados. No inferir ni generar números de teléfono.

@@ -17,6 +17,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Sensor de Oxígeno",
     ],
     imageSrc: "/serv-ie.png",
+    imageAlt:
+      "Servicio de inyección electrónica: limpieza y cambio de inyectores en Autodiagnóstico Panjos",
   },
   {
     number: "02",
@@ -30,6 +32,8 @@ const SERVICES_DATA = [
       "Cambio de Pastillas de Freno",
     ],
     imageSrc: "/serv-me.png",
+    imageAlt:
+      "Mecánica integral: cambio de aceite, filtros y revisión de frenos en Autodiagnóstico Panjos",
   },
   {
     number: "03",
@@ -43,6 +47,8 @@ const SERVICES_DATA = [
       "Revisión de Fusibles y Relés",
     ],
     imageSrc: "/serv-3.png",
+    imageAlt:
+      "Electrónica automotriz: diagnóstico computarizado y reparación de arranques en Autodiagnóstico Panjos",
   },
   {
     number: "04",
@@ -56,6 +62,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Compresor",
     ],
     imageSrc: "/serv-4.png",
+    imageAlt:
+      "Servicio de aire acondicionado automotriz: recarga de gas y cambio de filtro de cabina",
   },
   {
     number: "05",
@@ -69,6 +77,8 @@ const SERVICES_DATA = [
       "Reparacion de Suspensión",
     ],
     imageSrc: "/serv-5.png",
+    imageAlt:
+      "Alineación y balanceo de ruedas y reparación de suspensión en Autodiagnóstico Panjos",
   },
 ];
 
@@ -97,6 +107,17 @@ export default function ServiciosPage() {
               {/* <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
                 SERVICIO MECÁNICO MULTIMARCA
               </h2> */}
+              {/* TL;DR — the list of services up front, so the search intent
+                  ("what do they actually do?") is answered before scrolling
+                  through the animated card stack below. */}
+              <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
+                <span className="text-red-500 font-bold">TL;DR:</span> Inyección
+                electrónica (limpieza y cambio de inyectores, sensor de
+                oxígeno), diagnóstico computarizado, frenos, alineación y
+                balanceo, y cambio de aceite y filtros. Todas las marcas y
+                modelos, en Palermo, Montevideo.
+              </p>
+
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 Servicios de calidad garantizada para automotores de todas las marcas y modelos.
                 Ofrecemos una amplia gama de servicios para satisfacer las necesidades de nuestros clientes.
@@ -113,8 +134,15 @@ export default function ServiciosPage() {
         </div>
       </section>
 
-      {/* Services List Stack Section with GSAP Layered Stacking Animation */}
-      <ServiceCardsStack services={SERVICES_DATA} />
+      {/* Services List Stack Section with GSAP Layered Stacking Animation.
+          The h2 below is the missing rung in the heading ladder: each card
+          inside the stack is an h3, so without it the document jumped h1 → h3. */}
+      <section aria-labelledby="servicios-listado">
+        <h2 id="servicios-listado" className="sr-only">
+          Listado de servicios del taller
+        </h2>
+        <ServiceCardsStack services={SERVICES_DATA} />
+      </section>
     </div>
   );
 }

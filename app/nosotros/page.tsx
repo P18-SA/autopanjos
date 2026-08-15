@@ -32,9 +32,18 @@ export default function ServiciosPage() {
 
             {/* Bottom Subtitle & Slider/Indicator */}
             <div className="max-w-md w-full pt-8 pointer-events-auto">
-              {/* <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
-                SERVICIO MECÁNICO MULTIMARCA
-              </h2> */}
+              <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
+                MÁS DE UNA DÉCADA EN PALERMO
+              </h2>
+
+              {/* TL;DR — who/where/what, before the longer description. */}
+              <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
+                <span className="text-red-500 font-bold">TL;DR:</span> Taller
+                mecánico multimarca con más de 10 años en Isla de Flores 1691,
+                Palermo, Montevideo, a pocas cuadras de la Intendencia.
+                Atendemos español, inglés y portugués. No contamos con remolque.
+              </p>
+
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 Mantenimiento y reparación integral de vehículos: cambio de aceite y filtro,
                 revisión de frenos, alineación y balanceo.
@@ -59,8 +68,10 @@ export default function ServiciosPage() {
               <div className="red-container-box relative w-full h-[78%] my-auto group shadow-2xl">
                 <Image
                   src="/panjos20.png"
-                  alt="Autodiagnóstico Panjos"
+                  alt="Frente del taller Autodiagnóstico Panjos en Isla de Flores 1691, Palermo, Montevideo"
+                  title="Taller Autodiagnóstico Panjos, Palermo, Montevideo"
                   fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   priority
                 />
@@ -72,8 +83,10 @@ export default function ServiciosPage() {
                 <div className="red-container-box relative w-full h-[38%] group shadow-2xl">
                   <Image
                     src="/panjos0.jpg"
-                    alt="Elevador taller Panjos"
+                    alt="Vehículo sobre el elevador del taller Panjos durante una revisión mecánica"
+                    title="Elevador del taller Autodiagnóstico Panjos"
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     priority
                   />
@@ -83,8 +96,10 @@ export default function ServiciosPage() {
                 <div className="red-container-box relative w-full h-[80%] group shadow-2xl">
                   <Image
                     src="/panjos11.jpg"
-                    alt="Taller Panjos"
+                    alt="Interior del taller Autodiagnóstico Panjos con herramientas y equipos de diagnóstico"
+                    title="Interior del taller Autodiagnóstico Panjos"
                     fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                     priority
                   />

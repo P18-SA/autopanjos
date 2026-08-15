@@ -21,6 +21,21 @@ const FAQS = [
   },
 ];
 
+/**
+ * FAQPage structured data. Built from the same FAQS array that renders on
+ * screen, so the markup can never drift from the visible copy — Google
+ * penalises structured data that does not match what the user sees.
+ */
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQS.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: { "@type": "Answer", text: faq.answer },
+  })),
+};
+
 export default function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -34,6 +49,10 @@ export default function FaqSection() {
     // also lets an animated background layer (see LiquidBackground on
     // /nosotros) show through instead of being covered by an opaque block.
     <section className="relative z-10 w-full py-16 sm:py-24 px-6 sm:px-10 md:px-12 text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <div className="mx-auto flex flex-col gap-12 items-center">
         {/* Title */}
         <h2 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[150px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
@@ -49,9 +68,15 @@ export default function FaqSection() {
                 key={index}
                 className="bg-[#0b0b0b] border border-red-900/40 hover:border-red-600/60 rounded-xl overflow-hidden transition-all duration-300 shadow-xl"
               >
-                {/* Accordion Header */}
+                {/* Accordion Header. The button is wrapped in an h3 (not
+                    styled as one) so each question is a real heading under the
+                    section's h2 — previously the questions were plain spans,
+                    leaving the section with no sub-structure for crawlers or
+                    screen readers. */}
+                <h3>
                 <button
                   onClick={() => toggleFaq(index)}
+                  aria-expanded={isOpen}
                   className="w-full px-6 sm:px-8 py-4 sm:py-5 flex items-center justify-between text-left cursor-pointer focus:outline-none group"
                 >
                   <span className="font-yi-baiti text-base sm:text-xl text-white group-hover:text-red-400 transition-colors pr-4">
@@ -72,6 +97,7 @@ export default function FaqSection() {
                     />
                   </svg>
                 </button>
+                </h3>
 
                 {/* Accordion Body */}
                 {isOpen && (

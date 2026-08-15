@@ -37,6 +37,20 @@ export default function ContactoPage() {
             <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[165px] xl:text-[190px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl">
               CONTACTO
             </h1>
+
+            {/* TL;DR — where we are and how to reach us, above the fold. */}
+            <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mt-4 max-w-md">
+              <span className="text-red-500 font-bold">TL;DR:</span> Estamos en
+              Isla de Flores 1691, Palermo, Montevideo, a pocas cuadras de la
+              Intendencia. Escribinos por el formulario o a{" "}
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="underline hover:text-red-400 transition-colors"
+              >
+                {CONTACT_EMAIL}
+              </a>{" "}
+              para coordinar tu reparación.
+            </p>
           </div>
 
           {/* Item 2: Form — second on mobile, spans both rows on desktop (right column) */}
@@ -45,6 +59,7 @@ export default function ContactoPage() {
               onSubmit={handleSubmit}
               className="w-full max-w-[280px] flex flex-col pt-2 md:pt-16"
             >
+              <h2 className="sr-only">Formulario de contacto</h2>
               <p className="font-yi-baiti text-[11px] sm:text-xs text-gray-500 text-center leading-relaxed mb-3 px-2">
                 Escribe tu mensaje aqui abajo y te contactaremos
               </p>

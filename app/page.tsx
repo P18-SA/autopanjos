@@ -150,6 +150,18 @@ export default function Home() {
             <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
               SERVICIO MECÁNICO MULTIMARCA
             </h2>
+
+            {/* TL;DR — answers the search intent (what / where / for whom)
+                in the first lines, before the longer brand copy below. */}
+            <p className="font-yi-baiti text-xs sm:text-sm text-gray-200 leading-snug mb-3">
+              <span className="text-red-500 font-bold">TL;DR:</span> Taller
+              mecánico multimarca en Isla de Flores 1691, Palermo, Montevideo.
+              Inyección electrónica, diagnóstico computarizado, frenos,
+              alineación y balanceo, y cambio de aceite. Atendemos todos los
+              vehículos con motor a inyección electrónica.
+            </p>
+
+            <h3 className="sr-only">Sobre el taller</h3>
             <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-3">
               Tenemos mas de una decada de experiencia en el mercado,
               en autodiagnostico panjos,
@@ -208,8 +220,10 @@ export default function Home() {
           <div className="red-container-box w-full sm:w-72 md:w-80 h-72 sm:h-72 md:h-[480px] relative">
             <Image
               src="/image.avif"
-              alt="Autodiagnóstico Panjos"
+              alt="Mecánico trabajando en el taller Autodiagnóstico Panjos, Palermo, Montevideo"
+              title="Taller Autodiagnóstico Panjos en Palermo, Montevideo"
               fill
+              sizes="(max-width: 640px) 100vw, 320px"
               className="object-cover"
               priority
             />
