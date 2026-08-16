@@ -35,7 +35,12 @@ export default function ServiceCard({
     <div className="relative w-full h-full flex items-center justify-center p-6 sm:p-10 md:p-14 lg:p-16 select-none bg-[#060606] text-white">
       <div className="sc-content w-full flex flex-col md:flex-row items-center md:items-stretch gap-8 md:gap-12 lg:gap-16 h-full max-h-[85vh]">
         {/* Left Column: Narrow Tall Vertical Image Container */}
-        <div className="red-container-box relative w-full md:w-56 lg:w-64 xl:w-72 h-[380px] sm:h-[480px] md:h-full flex-shrink-0 group shadow-2xl overflow-hidden">
+        {/* Mobile heights trimmed (was 380px / 480px): inside an h-screen
+            panel capped at max-h-[85vh], a 380px image ate about two thirds
+            of a typical phone viewport and squeezed the title, number,
+            description and bullets below it. `md:h-full` is untouched, so
+            desktop is unchanged. */}
+        <div className="red-container-box relative w-full md:w-56 lg:w-64 xl:w-72 h-[280px] sm:h-[380px] md:h-full flex-shrink-0 group shadow-2xl overflow-hidden">
           <div className="sc-image absolute inset-0 will-change-transform">
             <Image
               src={imageSrc}
