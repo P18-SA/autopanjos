@@ -1,9 +1,17 @@
-"use client";
-
 import Header from "@/components/Header";
 import ServiceCardsStack from "@/components/ServiceCardsStack";
 import FaqSection from "@/components/FaqSection";
+import { getContent, type ContentImage } from "@/lib/content";
 
+/**
+ * Las tarjetas de servicio.
+ *
+ * El texto vive acá porque el content type `servicios` del CMS todavía tiene
+ * un solo campo (`contenido`) y no puede representar título + descripción +
+ * lista de servicios frecuentes. Las **imágenes** sí salen del CMS: cada una
+ * se busca por el `alt` con el que está cargada, y `imageSrc` queda como
+ * respaldo si no aparece.
+ */
 const SERVICES_DATA = [
   {
     number: "01",
@@ -17,6 +25,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Sensor de Oxígeno",
     ],
     imageSrc: "/serv-ie.png",
+    /** Nombre con el que esta imagen está cargada en el CMS. */
+    cmsImageKey: "Servicio de inyección electrónica",
     imageAlt:
       "Servicio de inyección electrónica: limpieza y cambio de inyectores en Autodiagnóstico Panjos",
   },
@@ -32,6 +42,8 @@ const SERVICES_DATA = [
       "Cambio de Pastillas de Freno",
     ],
     imageSrc: "/serv-me.png",
+    /** Nombre con el que esta imagen está cargada en el CMS. */
+    cmsImageKey: "Servicio de mecánica integral",
     imageAlt:
       "Mecánica integral: cambio de aceite, filtros y revisión de frenos en Autodiagnóstico Panjos",
   },
@@ -47,6 +59,8 @@ const SERVICES_DATA = [
       "Revisión de Fusibles y Relés",
     ],
     imageSrc: "/serv-3.png",
+    /** Nombre con el que esta imagen está cargada en el CMS. */
+    cmsImageKey: "Servicio de electrónica automotriz",
     imageAlt:
       "Electrónica automotriz: diagnóstico computarizado y reparación de arranques en Autodiagnóstico Panjos",
   },
@@ -62,6 +76,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Compresor",
     ],
     imageSrc: "/serv-4.png",
+    /** Nombre con el que esta imagen está cargada en el CMS. */
+    cmsImageKey: "Servicio de aire acondicionado",
     imageAlt:
       "Servicio de aire acondicionado automotriz: recarga de gas y cambio de filtro de cabina",
   },
@@ -77,12 +93,29 @@ const SERVICES_DATA = [
       "Reparacion de Suspensión",
     ],
     imageSrc: "/serv-5.png",
+    /** Nombre con el que esta imagen está cargada en el CMS. */
+    cmsImageKey: "Servicio de alineación y balanceo",
     imageAlt:
       "Alineación y balanceo de ruedas y reparación de suspensión en Autodiagnóstico Panjos",
   },
 ];
 
-export default function ServiciosPage() {
+// A Server Component: nada de esta página es interactivo (el stack animado
+// es un Client Component aparte), así que el contenido se resuelve en el
+// servidor y llega en el HTML.
+export default async function ServiciosPage() {
+  const content = await getContent();
+
+  // Cada tarjeta conserva su texto y cambia solo la imagen por la del CMS.
+  const services = SERVICES_DATA.map((service) => {
+    const image: ContentImage = content.image(service.cmsImageKey, {
+      src: service.imageSrc,
+      alt: service.imageAlt,
+    });
+
+    return { ...service, imageSrc: image.src, imageAlt: image.alt };
+  });
+
   return (
     <div className="relative w-full min-h-screen bg-[#060606] text-white overflow-x-hidden flex flex-col justify-between select-none">
       {/* Header: Shared Top Navigation Bar */}
@@ -96,9 +129,7 @@ export default function ServiciosPage() {
             {/* Main Title - Extra Large */}
             <div className="mt-2 md:mt-4 mb-auto">
               <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
-                SERVICIOS
-                <br />
-                MECÁNICOS
+                {content.h1("Titulo h1 service page", "SERVICIOS MECÁNICOS")}
               </h1>
             </div>
 
@@ -108,8 +139,10 @@ export default function ServiciosPage() {
                 SERVICIO MECÁNICO MULTIMARCA
               </h2> */}
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
-                Servicios de calidad garantizada para automotores de todas las marcas y modelos.
-                Ofrecemos una amplia gama de servicios para satisfacer las necesidades de nuestros clientes.
+                {content.text(
+                  "texto servicios page",
+                  "Servicios de calidad garantizada para automotores de todas las marcas y modelos. Ofrecemos una amplia gama de servicios para satisfacer las necesidades de nuestros clientes."
+                )}
               </p>
 
               {/* Slider Progress Indicator with Arrow */}
@@ -130,7 +163,7 @@ export default function ServiciosPage() {
         <h2 id="servicios-listado" className="sr-only">
           Listado de servicios del taller
         </h2>
-        <ServiceCardsStack services={SERVICES_DATA} />
+        <ServiceCardsStack services={services} />
       </section>
     </div>
   );

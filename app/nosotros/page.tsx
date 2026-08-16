@@ -1,11 +1,27 @@
-"use client";
-
 import Image from "next/image";
 import Header from "@/components/Header";
 import FaqSection from "@/components/FaqSection";
 import LiquidBackground from "@/components/LiquidBackground";
+import { getContent } from "@/lib/content";
 
-export default function ServiciosPage() {
+// A Server Component: nothing on this page is interactive, so the copy below
+// can be fetched from the CMS and rendered into the HTML the crawler sees.
+export default async function NosotrosPage() {
+  const content = await getContent();
+
+  const foto1 = content.image("nosotros-1", {
+    src: "/panjos20.png",
+    alt: "Frente del taller Autodiagnóstico Panjos en Isla de Flores 1691, Palermo, Montevideo",
+  });
+  const foto2 = content.image("nosotros-2", {
+    src: "/panjos0.jpg",
+    alt: "Vehículo sobre el elevador del taller Panjos durante una revisión mecánica",
+  });
+  const foto3 = content.image("nosotros-3", {
+    src: "/panjos11.jpg",
+    alt: "Interior del taller Autodiagnóstico Panjos con herramientas y equipos de diagnóstico",
+  });
+
   return (
     <div className="relative w-full min-h-screen bg-[#060606] text-white overflow-x-hidden flex flex-col justify-between select-none">
       {/* Animated gradient field. First in the DOM and at z-0 so every
@@ -23,9 +39,7 @@ export default function ServiciosPage() {
             {/* Main Title - Extra Large */}
             <div className="mt-2 md:mt-4 mb-auto">
               <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
-                SOBRE
-                <br />
-                NOSOTROS
+                {content.h1("Titulo h1 nosotros page", "SOBRE NOSOTROS")}
               </h1>
             </div>
 
@@ -33,15 +47,14 @@ export default function ServiciosPage() {
             {/* Bottom Subtitle & Slider/Indicator */}
             <div className="max-w-md w-full pt-8 pointer-events-auto">
               <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
-                MÁS DE UNA DÉCADA EN PALERMO
+                {content.h2("h2 nosotros page", "MÁS DE UNA DÉCADA EN PALERMO")}
               </h2>
 
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
-                Mantenimiento y reparación integral de vehículos: cambio de aceite y filtro,
-                revisión de frenos, alineación y balanceo.
-                Nuestro taller en Montevideo garantiza calidad, rapidez y transparencia en cada servicio,
-                para que disfrute siempre de un auto seguro y confiable.
-                Encuentra nuestro taller cerca tuyo, ubicado a algunas cuadras de la intendecia de Montevideo.
+                {content.text(
+                  "texto nosotros page",
+                  "Mantenimiento y reparación integral de vehículos: cambio de aceite y filtro, revisión de frenos, alineación y balanceo. Nuestro taller en Montevideo garantiza calidad, rapidez y transparencia en cada servicio, para que disfrute siempre de un auto seguro y confiable. Encuentra nuestro taller cerca tuyo, ubicado a algunas cuadras de la intendecia de Montevideo."
+                )}
               </p>
 
               {/* Slider Progress Indicator with Arrow */}
@@ -59,8 +72,8 @@ export default function ServiciosPage() {
               {/* Left Image Container */}
               <div className="red-container-box relative w-full h-[78%] my-auto group shadow-2xl">
                 <Image
-                  src="/panjos20.png"
-                  alt="Frente del taller Autodiagnóstico Panjos en Isla de Flores 1691, Palermo, Montevideo"
+                  src={foto1.src}
+                  alt={foto1.alt}
                   title="Taller Autodiagnóstico Panjos, Palermo, Montevideo"
                   fill
                   sizes="(max-width: 768px) 50vw, 25vw"
@@ -74,8 +87,8 @@ export default function ServiciosPage() {
                 {/* Top Right Container */}
                 <div className="red-container-box relative w-full h-[38%] group shadow-2xl">
                   <Image
-                    src="/panjos0.jpg"
-                    alt="Vehículo sobre el elevador del taller Panjos durante una revisión mecánica"
+                    src={foto2.src}
+                    alt={foto2.alt}
                     title="Elevador del taller Autodiagnóstico Panjos"
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -87,8 +100,8 @@ export default function ServiciosPage() {
                 {/* Bottom Right Container */}
                 <div className="red-container-box relative w-full h-[80%] group shadow-2xl">
                   <Image
-                    src="/panjos11.jpg"
-                    alt="Interior del taller Autodiagnóstico Panjos con herramientas y equipos de diagnóstico"
+                    src={foto3.src}
+                    alt={foto3.alt}
                     title="Interior del taller Autodiagnóstico Panjos"
                     fill
                     sizes="(max-width: 768px) 50vw, 25vw"
