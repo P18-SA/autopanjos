@@ -28,16 +28,39 @@
 export const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL ?? "https://cemapi-kappa.vercel.app";
 
 /** Our site's slug inside the CMS — the first segment of every API path. */
-const CMS_SITE = "jotalsoftdevs";
+export const CMS_SITE = "jotalsoftdevs";
+
+/**
+ * The cache tag every CMS request carries, so `/api/revalidate` can drop all of
+ * it at once when the panel says something changed.
+ *
+ * One tag for the whole CMS rather than one per content type: every page calls
+ * `getContent()`, which reads all four types, so a tag per type would invalidate
+ * exactly the same pages while giving the webhook a slug it has to get right.
+ */
+export const CMS_CACHE_TAG = "cms";
 
 /**
  * How long Next caches a CMS response, in seconds.
  *
- * The CMS already sends `s-maxage=60, stale-while-revalidate=300`, so this is
- * the second layer. Five minutes means a change in the panel shows up here
- * without a deploy, and a burst of traffic doesn't hammer the CMS.
+ * This is the window that decides how fast an edit in the panel reaches the
+ * live site, and it is the *only* layer that does: cemapi answers with a bare
+ * `Cache-Control: public` and its own URLs are content-addressed, so nothing
+ * upstream is holding a stale copy of the text.
+ *
+ * A minute is deliberately short. Because it is the lowest `revalidate` on the
+ * page, Next uses it as the page's regeneration window too, and regeneration is
+ * stale-while-revalidate: the first visitor after the minute passes still gets
+ * the old HTML and only *triggers* the rebuild, so the real worst case is
+ * roughly two windows. Sixty seconds keeps that under a couple of minutes while
+ * still collapsing a burst of traffic into one request to the CMS.
+ *
+ * This is the floor, not the mechanism: when cemapi calls `/api/revalidate` the
+ * change lands immediately and this window never comes into play. It stays
+ * short so a missed or misconfigured webhook degrades into a small delay rather
+ * than into content that never updates.
  */
-const REVALIDATE_SECONDS = 300;
+const REVALIDATE_SECONDS = 60;
 
 /** A file as the CMS returns it once media fields are populated. */
 export type CmsFile = {
@@ -111,7 +134,9 @@ export async function fetchEntries(
   let payload: unknown;
 
   try {
-    const res = await fetch(url, { next: { revalidate: REVALIDATE_SECONDS } });
+    const res = await fetch(url, {
+      next: { revalidate: REVALIDATE_SECONDS, tags: [CMS_CACHE_TAG] },
+    });
 
     if (!res.ok) {
       console.error(`CMS ${contentType}: HTTP ${res.status}`);
@@ -149,7 +174,7 @@ export async function fetchMediaIndex(): Promise<Map<string, CmsFile>> {
 
   try {
     const res = await fetch(`${CMS_URL}/api/${CMS_SITE}/media?pageSize=100`, {
-      next: { revalidate: REVALIDATE_SECONDS },
+      next: { revalidate: REVALIDATE_SECONDS, tags: [CMS_CACHE_TAG] },
     });
 
     if (!res.ok) {
