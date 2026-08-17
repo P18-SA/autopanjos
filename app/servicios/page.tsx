@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import ServiceCardsStack from "@/components/ServiceCardsStack";
 import FaqSection from "@/components/FaqSection";
 import { getContent, type ContentImage } from "@/lib/content";
+import { KEYS } from "@/lib/content-keys";
 
 /**
  * Las tarjetas de servicio.
@@ -9,8 +10,8 @@ import { getContent, type ContentImage } from "@/lib/content";
  * El texto vive acá porque el content type `servicios` del CMS todavía tiene
  * un solo campo (`contenido`) y no puede representar título + descripción +
  * lista de servicios frecuentes. Las **imágenes** sí salen del CMS: cada una
- * se busca por el `alt` con el que está cargada, y `imageSrc` queda como
- * respaldo si no aparece.
+ * apunta a su entry de `imagenes`, y `imageSrc` queda como respaldo si no
+ * aparece.
  */
 const SERVICES_DATA = [
   {
@@ -25,8 +26,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Sensor de Oxígeno",
     ],
     imageSrc: "/serv-ie.png",
-    /** Nombre con el que esta imagen está cargada en el CMS. */
-    cmsImageKey: "Servicio de inyección electrónica",
+    /** Entry de `imagenes` en el CMS con la foto de este servicio. */
+    cmsImage: KEYS.servicioInyeccion,
     imageAlt:
       "Servicio de inyección electrónica: limpieza y cambio de inyectores en Autodiagnóstico Panjos",
   },
@@ -42,8 +43,8 @@ const SERVICES_DATA = [
       "Cambio de Pastillas de Freno",
     ],
     imageSrc: "/serv-me.png",
-    /** Nombre con el que esta imagen está cargada en el CMS. */
-    cmsImageKey: "Servicio de mecánica integral",
+    /** Entry de `imagenes` en el CMS con la foto de este servicio. */
+    cmsImage: KEYS.servicioMecanica,
     imageAlt:
       "Mecánica integral: cambio de aceite, filtros y revisión de frenos en Autodiagnóstico Panjos",
   },
@@ -59,8 +60,8 @@ const SERVICES_DATA = [
       "Revisión de Fusibles y Relés",
     ],
     imageSrc: "/serv-3.png",
-    /** Nombre con el que esta imagen está cargada en el CMS. */
-    cmsImageKey: "Servicio de electrónica automotriz",
+    /** Entry de `imagenes` en el CMS con la foto de este servicio. */
+    cmsImage: KEYS.servicioElectronica,
     imageAlt:
       "Electrónica automotriz: diagnóstico computarizado y reparación de arranques en Autodiagnóstico Panjos",
   },
@@ -76,8 +77,8 @@ const SERVICES_DATA = [
       "Diagnóstico de Compresor",
     ],
     imageSrc: "/serv-4.png",
-    /** Nombre con el que esta imagen está cargada en el CMS. */
-    cmsImageKey: "Servicio de aire acondicionado",
+    /** Entry de `imagenes` en el CMS con la foto de este servicio. */
+    cmsImage: KEYS.servicioAire,
     imageAlt:
       "Servicio de aire acondicionado automotriz: recarga de gas y cambio de filtro de cabina",
   },
@@ -93,8 +94,8 @@ const SERVICES_DATA = [
       "Reparacion de Suspensión",
     ],
     imageSrc: "/serv-5.png",
-    /** Nombre con el que esta imagen está cargada en el CMS. */
-    cmsImageKey: "Servicio de alineación y balanceo",
+    /** Entry de `imagenes` en el CMS con la foto de este servicio. */
+    cmsImage: KEYS.servicioAlineacion,
     imageAlt:
       "Alineación y balanceo de ruedas y reparación de suspensión en Autodiagnóstico Panjos",
   },
@@ -108,7 +109,7 @@ export default async function ServiciosPage() {
 
   // Cada tarjeta conserva su texto y cambia solo la imagen por la del CMS.
   const services = SERVICES_DATA.map((service) => {
-    const image: ContentImage = content.image(service.cmsImageKey, {
+    const image: ContentImage = content.image(service.cmsImage, {
       src: service.imageSrc,
       alt: service.imageAlt,
     });
@@ -129,7 +130,7 @@ export default async function ServiciosPage() {
             {/* Main Title - Extra Large */}
             <div className="mt-2 md:mt-4 mb-auto">
               <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
-                {content.h1("Titulo h1 service page", "SERVICIOS MECÁNICOS")}
+                {content.h1(KEYS.serviciosH1, "SERVICIOS MECÁNICOS")}
               </h1>
             </div>
 
@@ -140,7 +141,7 @@ export default async function ServiciosPage() {
               </h2> */}
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 {content.text(
-                  "texto servicios page",
+                  KEYS.serviciosText,
                   "Servicios de calidad garantizada para automotores de todas las marcas y modelos. Ofrecemos una amplia gama de servicios para satisfacer las necesidades de nuestros clientes."
                 )}
               </p>

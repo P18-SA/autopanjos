@@ -3,21 +3,22 @@ import Header from "@/components/Header";
 import FaqSection from "@/components/FaqSection";
 import LiquidBackground from "@/components/LiquidBackground";
 import { getContent } from "@/lib/content";
+import { KEYS } from "@/lib/content-keys";
 
 // A Server Component: nothing on this page is interactive, so the copy below
 // can be fetched from the CMS and rendered into the HTML the crawler sees.
 export default async function NosotrosPage() {
   const content = await getContent();
 
-  const foto1 = content.image("nosotros-1", {
+  const foto1 = content.image(KEYS.nosotrosFoto1, {
     src: "/panjos20.png",
     alt: "Frente del taller Autodiagnóstico Panjos en Isla de Flores 1691, Palermo, Montevideo",
   });
-  const foto2 = content.image("nosotros-2", {
+  const foto2 = content.image(KEYS.nosotrosFoto2, {
     src: "/panjos0.jpg",
     alt: "Vehículo sobre el elevador del taller Panjos durante una revisión mecánica",
   });
-  const foto3 = content.image("nosotros-3", {
+  const foto3 = content.image(KEYS.nosotrosFoto3, {
     src: "/panjos11.jpg",
     alt: "Interior del taller Autodiagnóstico Panjos con herramientas y equipos de diagnóstico",
   });
@@ -39,7 +40,7 @@ export default async function NosotrosPage() {
             {/* Main Title - Extra Large */}
             <div className="mt-2 md:mt-4 mb-auto">
               <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
-                {content.h1("Titulo h1 nosotros page", "SOBRE NOSOTROS")}
+                {content.h1(KEYS.nosotrosH1, "SOBRE NOSOTROS")}
               </h1>
             </div>
 
@@ -47,12 +48,12 @@ export default async function NosotrosPage() {
             {/* Bottom Subtitle & Slider/Indicator */}
             <div className="max-w-md w-full pt-8 pointer-events-auto">
               <h2 className="font-impact text-xl sm:text-2xl md:text-3xl text-white uppercase tracking-wider mb-2">
-                {content.h2("h2 nosotros page", "MÁS DE UNA DÉCADA EN PALERMO")}
+                {content.h2(KEYS.nosotrosH2, "MÁS DE UNA DÉCADA EN PALERMO")}
               </h2>
 
               <p className="font-yi-baiti text-xs sm:text-sm text-gray-400 leading-snug mb-4">
                 {content.text(
-                  "texto nosotros page",
+                  KEYS.nosotrosText,
                   "Mantenimiento y reparación integral de vehículos: cambio de aceite y filtro, revisión de frenos, alineación y balanceo. Nuestro taller en Montevideo garantiza calidad, rapidez y transparencia en cada servicio, para que disfrute siempre de un auto seguro y confiable. Encuentra nuestro taller cerca tuyo, ubicado a algunas cuadras de la intendecia de Montevideo."
                 )}
               </p>

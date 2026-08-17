@@ -1,5 +1,6 @@
 import ContactoContent from "@/components/ContactoContent";
 import { getContent } from "@/lib/content";
+import { KEYS } from "@/lib/content-keys";
 
 /**
  * Contacto.
@@ -14,10 +15,10 @@ export default async function ContactoPage() {
   return (
     <ContactoContent
       content={{
-        h1: content.h1("Titulo h1 contact page", "CONTACTO"),
-        direccion: content.h2("h2 contacto page", "Isla de Flores 1691, Palermo Montevideo"),
+        h1: content.h1(KEYS.contactoH1, "CONTACTO"),
+        direccion: content.h2(KEYS.contactoH2, "Isla de Flores 1691, Palermo Montevideo"),
         texto: content.text(
-          "texto contacto page",
+          KEYS.contactoText,
           "Encuentra nuestro taller cerca tuyo ubicado a algunas cuadras de la intendecia de Montevideo"
         ),
       }}

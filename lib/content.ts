@@ -1,4 +1,5 @@
 import { fetchEntries, fetchMediaIndex, readFile, str, type CmsFile } from "@/lib/cms";
+import type { ContentKey } from "@/lib/content-keys";
 
 /**
  * The page copy — headings, paragraphs and images — read from cemapi.
@@ -16,13 +17,19 @@ import { fetchEntries, fetchMediaIndex, readFile, str, type CmsFile } from "@/li
  * title in the cemapi panel changes the live site once the window passes — no
  * rebuild, no redeploy.
  *
+ * ## How an entry is found
+ *
+ * By its id, with its name as backup — see `lib/content-keys.ts` for why. The
+ * lookup here is the mechanical half: id first, name second, hardcoded fallback
+ * last.
+ *
  * ## Why every lookup takes a fallback
  *
- * The CMS is a separate deployment that can be down, and its entries are keyed
- * by a human-typed name that someone can rename from a panel this codebase
- * knows nothing about. Either way the page still has to render something
+ * The CMS is a separate deployment that can be down, and its entries live in a
+ * panel this codebase knows nothing about: one can be deleted, unpublished, or
+ * recreated from scratch. Either way the page still has to render something
  * sensible, so each call passes the copy that used to be hardcoded. A missing
- * key degrades to the old text instead of rendering a blank heading.
+ * entry degrades to the old text instead of rendering a blank heading.
  */
 
 /** An image from the `imagenes` content type, resolved to a real URL. */
@@ -32,49 +39,87 @@ export type ContentImage = {
 };
 
 export type SiteContent = {
-  /** `titulos-h1`, keyed by its `nombre`. */
-  h1: (key: string, fallback: string) => string;
-  /** `subtitulos-h2`, keyed by its `name`. */
-  h2: (key: string, fallback: string) => string;
-  /** `textos`, keyed by its `name`. */
-  text: (key: string, fallback: string) => string;
+  /** `titulos-h1`. */
+  h1: (key: ContentKey, fallback: string) => string;
+  /** `subtitulos-h2`. */
+  h2: (key: ContentKey, fallback: string) => string;
+  /** `textos`. */
+  text: (key: ContentKey, fallback: string) => string;
   /**
-   * `imagenes`, keyed by its `alt` field.
+   * `imagenes`.
    *
-   * The `alt` doubles as the key because that is how the content type is set
-   * up today, so the caller passes the alt text it wants rendered as part of
-   * the fallback: for `nosotros-1` the CMS value is a name, not a description
-   * a screen reader should read out.
+   * The caller passes the alt text it wants rendered as part of the fallback:
+   * the `alt` field on the entry is the editor's label for it —`nosotros-1`—
+   * not a description a screen reader should read out.
    */
-  image: (key: string, fallback: ContentImage) => ContentImage;
+  image: (key: ContentKey, fallback: ContentImage) => ContentImage;
 };
 
-/** Entries indexed by the field they use as a name. Later wins on duplicates. */
-function indexByName(
-  entries: { data: Record<string, unknown> }[],
-): Map<string, Record<string, unknown>> {
-  const index = new Map<string, Record<string, unknown>>();
+/**
+ * One content type, indexed both ways so a key can be resolved by id first and
+ * by name second. Later entries win on duplicate names; ids can't collide.
+ */
+type EntryIndex = {
+  byId: Map<string, Record<string, unknown>>;
+  byName: Map<string, Record<string, unknown>>;
+};
+
+function indexEntries(entries: { id: string; data: Record<string, unknown> }[]): EntryIndex {
+  const index: EntryIndex = { byId: new Map(), byName: new Map() };
 
   for (const entry of entries) {
-    // `titulos-h1` uses `nombre` and the other two use `name`. Accepting both
-    // means renaming the field in the CMS doesn't silently empty the site.
-    const key = str(entry.data.nombre) ?? str(entry.data.name) ?? str(entry.data.alt);
-    if (key) index.set(key, entry.data);
+    index.byId.set(entry.id, entry.data);
+
+    // `titulos-h1` uses `nombre`, `textos` and `subtitulos-h2` use `name`, and
+    // `imagenes` uses `alt`. Accepting the three means the backup lookup keeps
+    // working whichever content type it lands on.
+    const name = str(entry.data.nombre) ?? str(entry.data.name) ?? str(entry.data.alt);
+    if (name) index.byName.set(name, entry.data);
   }
 
   return index;
 }
 
-function lookup(
-  index: Map<string, Record<string, unknown>>,
+/**
+ * The entry a key points at, or `null`.
+ *
+ * Resolving by name after the id misses is the recovery path for an entry that
+ * was deleted and created again, so it warns: the site keeps working, but the
+ * id in `lib/content-keys.ts` is stale and only the name is holding it up.
+ */
+function resolveEntry(
+  index: EntryIndex,
+  key: ContentKey,
   label: string,
-): (key: string, fallback: string) => string {
+): Record<string, unknown> | null {
+  const byId = index.byId.get(key.id);
+  if (byId) return byId;
+
+  const byName = index.byName.get(key.name);
+
+  if (byName) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        `CMS ${label}: no entry with id ${key.id}, found "${key.name}" by name — ` +
+          `update the id in lib/content-keys.ts.`,
+      );
+    }
+    return byName;
+  }
+
+  return null;
+}
+
+function lookup(
+  index: EntryIndex,
+  label: string,
+): (key: ContentKey, fallback: string) => string {
   return (key, fallback) => {
-    const value = str(index.get(key)?.contenido);
+    const value = str(resolveEntry(index, key, label)?.contenido);
     if (value) return value;
 
     if (process.env.NODE_ENV !== "production") {
-      console.warn(`CMS ${label}: no entry named "${key}" — using the fallback copy.`);
+      console.warn(`CMS ${label}: no entry for "${key.name}" — using the fallback copy.`);
     }
 
     return fallback;
@@ -97,16 +142,16 @@ export async function getContent(): Promise<SiteContent> {
     fetchEntries("imagenes"),
   ]);
 
-  const titleIndex = indexByName(titles);
-  const subtitleIndex = indexByName(subtitles);
-  const textIndex = indexByName(texts);
-  const imageIndex = indexByName(images);
+  const titleIndex = indexEntries(titles);
+  const subtitleIndex = indexEntries(subtitles);
+  const textIndex = indexEntries(texts);
+  const imageIndex = indexEntries(images);
 
   // Si el CMS respondió sin popular los campos media —un deploy viejo de
   // cemapi, que todavía no entiende `?populate=media`—, `src` sigue siendo el
   // uuid. En ese caso se trae la biblioteca entera de una y se resuelven todos
   // los uuids con un solo pedido extra, en vez de un salto por imagen.
-  const needsFallback = [...imageIndex.values()].some(
+  const needsFallback = [...imageIndex.byId.values()].some(
     (entry) => readFile(entry.src) === null && str(entry.src) !== null,
   );
 
@@ -120,7 +165,7 @@ export async function getContent(): Promise<SiteContent> {
     text: lookup(textIndex, "textos"),
 
     image: (key, fallback) => {
-      const entry = imageIndex.get(key);
+      const entry = resolveEntry(imageIndex, key, "imagenes");
       const uuid = entry ? str(entry.src) : null;
 
       const file =
@@ -129,7 +174,7 @@ export async function getContent(): Promise<SiteContent> {
 
       if (!file) {
         if (process.env.NODE_ENV !== "production") {
-          console.warn(`CMS imagenes: no usable file named "${key}" — using ${fallback.src}.`);
+          console.warn(`CMS imagenes: no usable file for "${key.name}" — using ${fallback.src}.`);
         }
         return fallback;
       }
