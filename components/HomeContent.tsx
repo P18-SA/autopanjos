@@ -143,8 +143,19 @@ export default function HomeContent({ content }: Props) {
   // Only the car on screen gets resolved, and only once per page load.
   const model = useModelUrl(currentCar);
 
+  // `h-screen overflow-hidden` is kept for `md:` and up, where the 3D car
+  // needs a fixed, non-scrolling stage. On a phone there is no car (see
+  // `isDesktop` above) and the right-hand column — note, Servicios button,
+  // photo — adds up to more than a short viewport can hold, so forcing it all
+  // into one clipped screen cut the photo off. Below `md:` the page is
+  // therefore allowed to grow and scroll normally; together with
+  // `pb-mobile-cta` that guarantees the fixed call bar never covers anything.
+  // Horizontal clipping is kept on both sides of the breakpoint, though: the
+  // right-hand column enters with `animate-component-right`, whose first
+  // keyframe is `translateX(50px)`, and without `overflow-x-hidden` that
+  // overshoot briefly widens the page on a phone.
   return (
-    <main className="relative w-full h-screen overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-12 select-none">
+    <main className="pb-mobile-cta relative w-full min-h-screen overflow-x-hidden md:h-screen md:overflow-hidden flex flex-col justify-between p-6 sm:p-10 md:p-12 select-none">
       {/* 3D Car Model Layer (On top of main content layer: z-30).
           Desktop only — not rendered at all on phones rather than hidden
           with CSS, so mobile skips the WebGL context and, more importantly,
@@ -179,11 +190,20 @@ export default function HomeContent({ content }: Props) {
         <div className="md:col-span-7 lg:col-span-7 flex flex-col justify-between h-full py-2">
           {/* Row 1: Main Title */}
           <div className="mt-8 md:mt-12 mb-auto pt-2">
-            {/* Base size is set in rem rather than text-6xl: "AUTODIAGNÓSTICO"
-                is a single 15-character word that cannot wrap, and at 60px it
-                overflowed the viewport on phones. Every sm:/md:/lg: step is
-                unchanged, so desktop renders exactly as before. */}
-            <h1 className="font-impact text-[3.2rem] sm:text-9xl md:text-9xl lg:text-[135px] uppercase text-white leading-[0.88] tracking-tight drop-shadow-2xl opacity-90">
+            {/* "AUTODIAGNÓSTICO" is a single 15-character word that cannot
+                wrap, so its size on a phone is bounded by the viewport, not
+                by taste. The old flat 3.2rem was hand-fitted to Impact; Anton
+                sets ~6.2em wide for that word rather than Impact's ~5.9em, so
+                the same value now overflows a 375px screen (and badly on a
+                320px one). `min()` keeps 3.2rem as the ceiling and otherwise
+                derives the size from the space actually available —
+                100vw minus the 3rem of `p-6` padding, divided by that 6.2em
+                ratio with a couple of percent to spare. (The underscores are
+                Tailwind's escape for the spaces `calc()` requires around
+                its `-`; without them the whole declaration is invalid.) From `sm:` up
+                `sm:text-9xl` takes over, so every larger breakpoint is
+                exactly as before. */}
+            <h1 className="font-impact text-[min(3.2rem,calc(15.8vw_-_7.6px))] sm:text-9xl md:text-9xl lg:text-[135px] uppercase text-white leading-[0.88] tracking-tight drop-shadow-2xl opacity-90">
               {content.h1}
             </h1>
           </div>

@@ -1,7 +1,42 @@
 import type { Metadata } from "next";
+import { Anton, Barlow } from "next/font/google";
 import "./globals.css";
 import { siteUrl, businessName, address } from "@/lib/site";
 import MobileCallBar from "@/components/MobileCallBar";
+
+/**
+ * Both original families were system-only fonts: Impact (absent on Android
+ * and most Linux) and Microsoft Yi Baiti (Windows-only). Chrome on Android
+ * therefore had nothing to match and silently fell back to its default sans,
+ * which is why the site looked wrong there.
+ *
+ * These are the self-hosted replacements, served from our own domain by
+ * next/font, so every device renders identically:
+ *   - Anton  → the standard web stand-in for Impact: tall, condensed, heavy.
+ *   - Barlow → a low-contrast grotesque with the narrow proportions and light
+ *              stroke of Yi Baiti's Latin glyphs.
+ *
+ * They are exposed as CSS variables (rather than applied via `.className`)
+ * because the whole app already selects fonts through the `.font-impact` /
+ * `.font-yi-baiti` utilities in globals.css — those now point here, so not a
+ * single component had to change.
+ */
+const anton = Anton({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+});
+
+const barlow = Barlow({
+  // The weights actually used on screen: `font-normal`, `font-semibold`
+  // (mobile call bar) and `font-bold` (contact address).
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-body",
+});
+
 
 export const metadata: Metadata = {
   // metadataBase makes every relative OG/canonical URL below resolve to an
@@ -74,7 +109,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-UY" className="h-full antialiased">
+    <html
+      lang="es-UY"
+      className={`${anton.variable} ${barlow.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col bg-[#060606] text-white selection:bg-red-900 selection:text-white">
         <script
           type="application/ld+json"

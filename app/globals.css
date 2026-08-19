@@ -1,16 +1,64 @@
 @import "tailwindcss";
 
+/* Phones that are both narrow and very short — an iPhone SE at 320x568 is the
+   canonical case. A service panel has to stack image, title, number,
+   description, subheading and a bullet list inside one 100vh screen, and at
+   that height the stack runs about 30px past the bottom even after every other
+   fix. `short-phone:` trims the vertical rhythm there and nowhere else.
+
+   The 639px ceiling (rather than 767px) is deliberate: it makes this variant
+   strictly disjoint from Tailwind's `sm:` (min-width 640px), so a class like
+   `mb-6 short-phone:mb-3 sm:mb-8` can never have two competing rules active at
+   once and the result never depends on which one CSS emits last. */
+@custom-variant short-phone (@media (max-width: 639px) and (max-height: 620px));
+
+/* Both utilities resolve to the self-hosted webfonts declared in
+   app/layout.tsx (Anton / Barlow). The old system names are kept at the end
+   of each stack purely as a last-resort fallback if the webfont ever fails
+   to load — they are no longer what the design depends on, which is the
+   whole point: Impact and Microsoft Yi Baiti do not exist on Android, so
+   Chrome there rendered its default sans instead. */
 @layer utilities {
   .font-impact {
-    font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font-family: var(--font-display), Impact, Haettenschweiler,
+      "Arial Narrow Bold", sans-serif;
   }
   .font-yi-baiti {
-    font-family: "Microsoft Yi Baiti", "Yi Baiti", "Segoe UI", system-ui, sans-serif;
+    font-family: var(--font-body), "Segoe UI", system-ui, sans-serif;
   }
 }
 
 :root {
   --bg-radial: radial-gradient(circle at 50% 50%, #0f0f0f 0%, #0a0a0a 55%, #060606 100%);
+
+  /* Height of the fixed mobile call bar (MobileCallBar), including the
+     device's home-indicator inset. Anything that renders content against the
+     bottom of the viewport on a phone reserves this much space via
+     `.pb-mobile-cta` below, so the bar never sits on top of it. Both live
+     here so the bar and the clearance can never drift apart. */
+  --mobile-cta-h: calc(4.25rem + env(safe-area-inset-bottom));
+}
+
+/* Bottom clearance for the fixed mobile call bar.
+   The condition is written as the exact logical complement of Tailwind's
+   `md:` (`min-width: 768px`) rather than as `max-width: 767px`. Those look
+   equivalent but are not: on a display whose device-pixel-ratio is
+   fractional the media width can land between the two, and there the bar
+   (hidden only from `md:` up) would be on screen while a `max-width: 767px`
+   rule had already stopped applying — a one-pixel band where the bar covers
+   content again. Negating the same query the bar uses closes that gap by
+   construction, and from 768px up this rule still does nothing at all, so no
+   layout that was already fine can change.
+
+   It also sits outside `@layer utilities` deliberately — unlayered CSS
+   outranks Tailwind's utility layer, so it reliably overrides the `pb-*` a
+   section already carries instead of depending on source order. The extra
+   0.75rem is breathing room, so content stops short of the bar rather than
+   touching it. */
+@media not all and (min-width: 768px) {
+  .pb-mobile-cta {
+    padding-bottom: calc(var(--mobile-cta-h) + 0.75rem);
+  }
 }
 
 body {
@@ -18,7 +66,7 @@ body {
   color: #ffffff;
   min-height: 100vh;
   overflow-x: hidden;
-  font-family: "Microsoft Yi Baiti", "Yi Baiti", "Segoe UI", sans-serif;
+  font-family: var(--font-body), "Segoe UI", system-ui, sans-serif;
 }
 
 /* Animations for components appearing from outside simultaneously */
@@ -110,4 +158,49 @@ body {
 .red-container-box:hover {
   border-color: rgba(239, 68, 68, 0.85);
   box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+}
+
+/* Contact page: the line-and-arrow link to Google Maps.
+   Nothing about it reads as clickable while it sits still, and on a phone
+   there is no hover to discover it with — so it performs its own hover
+   gesture on a loop. The double nudge happens in the first ~1.2s and the
+   remaining ~3.8s of the 5s cycle is rest, which reads as a deliberate hint
+   rather than a fidget.
+
+   The keyframes drive `translate`, not `transform`: the element's hover
+   state is Tailwind's `group-hover:translate-x-1`, which compiles to
+   `--tw-translate-x` + `transform`. Animating a different property keeps the
+   two completely independent, so the hover shift still applies normally
+   while the loop is suspended below. */
+@keyframes arrow-hint {
+  0%,
+  24%,
+  100% {
+    translate: 0;
+  }
+  6%,
+  18% {
+    translate: 0.375rem;
+  }
+  12% {
+    translate: 0;
+  }
+}
+
+.arrow-hint {
+  animation: arrow-hint 5s ease-in-out infinite;
+}
+
+/* Hovering hands control back to `group-hover:translate-x-1`. Keyed off
+   `.arrow-hint-group` rather than Tailwind's generic `.group` so no other
+   `group` container elsewhere in the app can trigger it — same reasoning as
+   `.brand-group` above. */
+.arrow-hint-group:hover .arrow-hint {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow-hint {
+    animation: none;
+  }
 }

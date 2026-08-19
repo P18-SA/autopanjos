@@ -123,13 +123,19 @@ export default async function ServiciosPage() {
       <Header />
 
       {/* Hero Content Section */}
-      <section className="relative w-full min-h-screen flex flex-col justify-between pt-20 sm:pt-24 pb-12 px-6 sm:px-10 md:px-12">
+      <section className="pb-mobile-cta relative w-full min-h-screen flex flex-col justify-between pt-20 sm:pt-24 pb-12 px-6 sm:px-10 md:px-12">
         <div className="relative z-20 flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-stretch pt-2 pb-2 my-auto">
           {/* Column 1 (Left: Huge Title + Subtitle & Indicator) */}
           <div className="md:col-span-12 lg:col-span-12 flex flex-col justify-between h-full py-2 animate-component-left">
             {/* Main Title - Extra Large */}
             <div className="mt-2 md:mt-4 mb-auto">
-              <h1 className="font-impact text-7xl sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
+              {/* Same viewport-bound sizing as the home h1: "MECÁNICOS" is a
+                  single unbreakable word, and at a flat 4.5rem it runs past
+                  the edge of a 320px screen. The `min()` ceiling is that same
+                  4.5rem, so anything from ~360px up is completely unchanged;
+                  only the narrowest phones step down. `sm:` and beyond are
+                  untouched. */}
+              <h1 className="font-impact text-[min(4.5rem,calc(25vw_-_12px))] sm:text-9xl md:text-[130px] lg:text-[160px] xl:text-[185px] uppercase text-white leading-[0.82] tracking-tighter drop-shadow-2xl opacity-95">
                 {content.h1(KEYS.serviciosH1, "SERVICIOS MECÁNICOS")}
               </h1>
             </div>

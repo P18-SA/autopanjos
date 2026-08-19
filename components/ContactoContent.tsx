@@ -4,6 +4,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import LiquidBackground from "@/components/LiquidBackground";
 import ArrowButton from "@/components/ArrowButton";
+import { address } from "@/lib/site";
 
 const CONTACT_EMAIL = "autopanjos@adinet.com.uy";
 
@@ -35,7 +36,7 @@ export default function ContactoContent({ content }: Props) {
       {/* Header: Shared Top Navigation Bar */}
       <Header />
 
-      <section className="relative z-10 w-full min-h-screen flex flex-col pt-24 sm:pt-28 pb-8 px-6 sm:px-10 md:px-12">
+      <section className="pb-mobile-cta relative z-10 w-full min-h-screen flex flex-col pt-24 sm:pt-28 pb-8 px-6 sm:px-10 md:px-12">
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 md:grid-rows-[auto_1fr] gap-10 md:gap-6">
           {/* Item 1: Title — always first */}
           <div className="order-1 md:col-span-8 lg:col-span-8 animate-component-left mt-4 md:mt-10">
@@ -132,17 +133,20 @@ export default function ContactoContent({ content }: Props) {
                 MONTEVIDEO PALERMO ISLA DE FLORES
               </p>
 
-              {/* Line + arrow indicator — links to Google Maps */}
+              {/* Line + arrow indicator — links to Google Maps. `arrow-hint-group`
+                  makes the arrow replay its hover nudge every 5s (see
+                  globals.css), which is the only cue that this is a link —
+                  especially on touch, where there is no hover at all. */}
               <a
-                href="https://maps.app.goo.gl/YEKdUq6c6ZstDCCJ7"
+                href={address.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Ver ubicación en Google Maps"
-                className="flex items-center space-x-3 w-64 sm:w-80 mt-3 group cursor-pointer"
+                className="arrow-hint-group flex items-center space-x-3 w-64 sm:w-80 mt-3 group cursor-pointer"
               >
                 <div className="flex-1 h-[1.5px] bg-white/70 rounded-full" />
                 <svg
-                  className="w-6 h-6 text-white flex-shrink-0 transform group-hover:translate-x-1 transition-transform"
+                  className="arrow-hint w-6 h-6 text-white flex-shrink-0 transform group-hover:translate-x-1 transition-transform"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.8"

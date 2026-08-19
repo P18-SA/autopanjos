@@ -1,4 +1,4 @@
-import { phoneNumber, phoneDisplay, whatsappNumber, contactEmail } from "@/lib/site";
+import { phoneNumber, phoneDisplay, whatsappNumber, contactEmail, address } from "@/lib/site";
 
 /**
  * Fixed call-to-action bar, mobile only (`md:hidden`).
@@ -21,10 +21,35 @@ export default function MobileCallBar() {
 
   return (
     <>
-      {/* Spacer so the fixed bar never covers the last line of page content. */}
-      <div aria-hidden="true" className="md:hidden h-16" />
+      {/* Spacer so the fixed bar never covers the last line of page content.
+          Sized from the same `--mobile-cta-h` that `.pb-mobile-cta` uses, so
+          the bar, this spacer and every page's bottom clearance stay in
+          step from one place. */}
+      <div
+        aria-hidden="true"
+        className="md:hidden"
+        style={{ height: "var(--mobile-cta-h)" }}
+      />
 
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-[70] flex items-stretch gap-2 px-3 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] bg-[#0b0b0b]/95 backdrop-blur-md border-t border-white/10">
+        {/* Location. Same destination as the arrow link at the bottom of the
+            contact page, so a visitor can open the shop in Maps from any
+            page without hunting for /contacto first. The icon is a folded
+            map rather than a pin: a pin reads as "here is a place", a map
+            reads as "open the map", which is what tapping this actually
+            does. */}
+        <a
+          href={address.mapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Ver ubicación en Google Maps: ${address.street}, ${address.neighbourhood}, ${address.city}`}
+          className="flex-shrink-0 flex items-center justify-center rounded-xl border border-white/15 bg-[#262626]/80 hover:bg-[#333333]/90 px-4 transition-colors"
+        >
+          <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M20.5 3a.5.5 0 0 0-.16.03L15 5.1 9 3 3.36 4.9A.5.5 0 0 0 3 5.38V20.5a.5.5 0 0 0 .66.47L9 18.9l6 2.1 5.64-1.9a.5.5 0 0 0 .36-.48V3.5a.5.5 0 0 0-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" />
+          </svg>
+        </a>
+
         <a
           href={`tel:${phoneNumber}`}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 active:bg-red-700 px-4 py-3 font-yi-baiti text-base font-semibold text-white transition-colors"
@@ -37,7 +62,18 @@ export default function MobileCallBar() {
           >
             <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z" />
           </svg>
-          <span>Llamar{phoneDisplay ? ` ${phoneDisplay}` : ""}</span>
+          {/* The bar now holds three controls instead of two, so on a 360px
+              phone the middle button no longer has room for "Llamar" plus a
+              14-character number — it would push the WhatsApp button off the
+              edge. The number is therefore revealed only from the width where
+              it actually fits; below that the button still reads "Llamar",
+              which is all it needs to say. */}
+          <span className="whitespace-nowrap">
+            Llamar
+            {phoneDisplay ? (
+              <span className="hidden min-[440px]:inline">{` ${phoneDisplay}`}</span>
+            ) : null}
+          </span>
         </a>
 
         {hasWhatsapp ? (
@@ -46,7 +82,7 @@ export default function MobileCallBar() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Escribir por WhatsApp"
-            className="flex items-center justify-center rounded-xl border border-white/15 bg-[#262626]/80 hover:bg-[#333333]/90 px-4 transition-colors"
+            className="flex-shrink-0 flex items-center justify-center rounded-xl border border-white/15 bg-[#262626]/80 hover:bg-[#333333]/90 px-4 transition-colors"
           >
             <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3A3 3 0 0 0 7 10a5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.9.7 1.9.5 2.3.5a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z" />
@@ -56,7 +92,7 @@ export default function MobileCallBar() {
           <a
             href={`mailto:${contactEmail}`}
             aria-label="Escribirnos por correo"
-            className="flex items-center justify-center rounded-xl border border-white/15 bg-[#262626]/80 hover:bg-[#333333]/90 px-4 transition-colors"
+            className="flex-shrink-0 flex items-center justify-center rounded-xl border border-white/15 bg-[#262626]/80 hover:bg-[#333333]/90 px-4 transition-colors"
           >
             <svg
               className="w-5 h-5 text-white"
