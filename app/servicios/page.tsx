@@ -52,7 +52,7 @@ const SERVICES_DATA = [
     number: "03",
     title: "Electrónica Automotriz",
     description:
-      "Disciplina que integra sistemas eléctricos y electrónicos en los vehículos, permitiendo funciones como control de motor, seguridad y entretenimiento.",
+      "Disciplina que integra sistemas eléctricos y electrónicos en los vehículos, permitiendo funciones como control de motor, seguridad y diagnóstico computarizado.",
     subheading: "Servicios más frecuentes:",
     frequentServices: [
       "Diagnóstico Computarizado",
