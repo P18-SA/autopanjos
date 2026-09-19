@@ -1,8 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
-const FAQS = [
+type Faq = {
+  question: string;
+  answer: string;
+  /** Optional follow-up link shown under the answer. */
+  link?: { href: string; label: string };
+};
+
+const FAQS: Faq[] = [
   {
     question: "¿Que marcas y modelos de vehículos atienden?",
     answer: "Atendemos todos los vehiculos con motor a inyeccion electrónica",
@@ -18,6 +26,13 @@ const FAQS = [
   {
     question: "Moneda y cambio",
     answer: "Aceptamos distintas divisas y monedas, verifique con nuestro equipo de ventas",
+  },
+  {
+    question: "¿Qué puedo hacer mientras mi auto está en el taller?",
+    answer:
+      "Estamos en Palermo, a pocas cuadras de la Rambla y cerca del Parque Rodó. Armamos un recorrido a pie con lo que hay para ver en el barrio mientras esperas.",
+    // The only way into /mientras-esperas: it is not in the menu or sitemap.
+    link: { href: "/mientras-esperas", label: "Ver qué hay cerca del taller" },
   },
 ];
 
@@ -107,6 +122,24 @@ export default function FaqSection() {
                     <p className="font-yi-baiti text-sm sm:text-base text-gray-300 leading-relaxed max-w-xl">
                       {faq.answer}
                     </p>
+                    {faq.link && (
+                      <Link
+                        href={faq.link.href}
+                        className="arrow-hint-group group mt-4 inline-flex items-center gap-2 font-yi-baiti text-sm sm:text-base text-red-400 hover:text-red-300 transition-colors"
+                      >
+                        {faq.link.label}
+                        <svg
+                          className="arrow-hint w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                      </Link>
+                    )}
                   </div>
                 )}
               </div>

@@ -204,3 +204,83 @@ body {
     animation: none;
   }
 }
+
+/* /mientras-esperas — map pins and stop list.
+   `is-active` is toggled by ScrollTrigger on both a stop and its pin, so the
+   list and the map always agree on where the visitor "is". */
+.me-pin-halo {
+  fill: none;
+  stroke: #dc2626;
+  stroke-width: 1.5;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.me-pin-dot {
+  fill: #060606;
+  stroke: #dc2626;
+  stroke-width: 2;
+  transition: fill 0.3s ease;
+}
+.me-pin-num {
+  fill: #fff;
+}
+.me-pin-detour .me-pin-dot {
+  stroke: rgba(255, 255, 255, 0.75);
+}
+.me-pin-detour .me-pin-halo {
+  stroke: rgba(255, 255, 255, 0.75);
+}
+.me-pin.is-active .me-pin-dot {
+  fill: #dc2626;
+}
+.me-pin-detour.is-active .me-pin-dot {
+  fill: rgba(255, 255, 255, 0.2);
+}
+.me-pin.is-active .me-pin-halo {
+  animation: me-halo 1.8s ease-out infinite;
+}
+@keyframes me-halo {
+  from {
+    opacity: 0.9;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.me-stop {
+  opacity: 0.35;
+  transition: opacity 0.4s ease;
+}
+.me-stop.is-active {
+  opacity: 1;
+}
+.me-stop-mark {
+  color: rgba(255, 255, 255, 0.25);
+  transition: color 0.4s ease;
+}
+.me-stop.is-active .me-stop-mark {
+  color: #dc2626;
+}
+
+.me-scroll-cue {
+  animation: me-cue 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes me-cue {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .me-pin.is-active .me-pin-halo,
+  .me-scroll-cue {
+    animation: none;
+  }
+}
