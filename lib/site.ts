@@ -29,6 +29,9 @@ export const phoneDisplay = "(+598) 99 334 970";
 /** WhatsApp number in wa.me format (digits only, no +). Optional. */
 export const whatsappNumber = "+59899334970";
 
+/** Human-readable version of `whatsappNumber`, shown on screen. */
+export const whatsappDisplay = "+598 99 334 970";
+
 export const contactEmail = "autopanjos@adinet.com.uy";
 
 export const businessName = "Autodiagnóstico Panjos";

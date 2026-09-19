@@ -4,9 +4,22 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import LiquidBackground from "@/components/LiquidBackground";
 import ArrowButton from "@/components/ArrowButton";
-import { address } from "@/lib/site";
+import {
+  address,
+  contactEmail,
+  phoneDisplay,
+  phoneNumber,
+  whatsappDisplay,
+  whatsappNumber,
+} from "@/lib/site";
 
-const CONTACT_EMAIL = "autopanjos@adinet.com.uy";
+// wa.me only accepts digits — normalise so lib/site.ts can keep the "+".
+const WA_DIGITS = whatsappNumber.replace(/\D/g, "");
+
+// Same visual weight as ArrowButton so the three channels read as one set;
+// WhatsApp overrides the background to red as the primary channel.
+const CHANNEL_CLASSES =
+  "w-full px-4 py-3 backdrop-blur-md rounded-xl border flex items-center gap-3 text-white transition-all group shadow-lg";
 
 type Props = {
   /** Copy ya resuelta en el servidor: llega en el HTML, no se pide del browser. */
@@ -25,7 +38,7 @@ export default function ContactoContent({ content }: Props) {
     e.preventDefault();
     const subject = encodeURIComponent("Consulta desde la web de Panjos");
     const body = encodeURIComponent(`${message}\n\nResponder a: ${email}`);
-    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -51,9 +64,67 @@ export default function ContactoContent({ content }: Props) {
               onSubmit={handleSubmit}
               className="w-full max-w-[280px] flex flex-col pt-2 md:pt-16"
             >
+              {/* Direct channels first: most customers want to write or call
+                  right away, so these lead and the form is the fallback. */}
+              <h2 className="sr-only">Contacto directo</h2>
+              <div className="flex flex-col gap-2.5 mb-8">
+                <a
+                  href={`https://wa.me/${WA_DIGITS}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${CHANNEL_CLASSES} bg-red-600 hover:bg-red-500 border-red-500/60`}
+                >
+                  <svg className="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20zm4.4-5.9c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.7.9-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.6-1.2a.4.4 0 0 0 0-.4l-.8-1.8c-.2-.4-.4-.4-.5-.4h-.5a1 1 0 0 0-.7.3A3 3 0 0 0 7 10a5.2 5.2 0 0 0 1.1 2.7 11.9 11.9 0 0 0 4.6 4c1.9.7 1.9.5 2.3.5a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3z" />
+                  </svg>
+                  <span className="flex flex-col leading-tight">
+                    <span className="font-yi-baiti text-[11px] uppercase tracking-wider text-white/80">
+                      WhatsApp
+                    </span>
+                    <span className="font-yi-baiti text-base font-semibold whitespace-nowrap">
+                      {whatsappDisplay}
+                    </span>
+                  </span>
+                </a>
+
+                <a
+                  href={`tel:${phoneNumber}`}
+                  className={`${CHANNEL_CLASSES} bg-[#262626]/80 hover:bg-[#333333]/90 border-white/10 hover:border-red-500/40`}
+                >
+                  <svg className="w-6 h-6 flex-shrink-0 text-red-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z" />
+                  </svg>
+                  <span className="flex flex-col leading-tight">
+                    <span className="font-yi-baiti text-[11px] uppercase tracking-wider text-gray-400">
+                      Llamadas
+                    </span>
+                    <span className="font-yi-baiti text-base font-semibold whitespace-nowrap">
+                      {phoneDisplay}
+                    </span>
+                  </span>
+                </a>
+
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className={`${CHANNEL_CLASSES} bg-[#262626]/80 hover:bg-[#333333]/90 border-white/10 hover:border-red-500/40`}
+                >
+                  <svg className="w-6 h-6 flex-shrink-0 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 7l9 6 9-6M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z" />
+                  </svg>
+                  <span className="flex flex-col leading-tight min-w-0">
+                    <span className="font-yi-baiti text-[11px] uppercase tracking-wider text-gray-400">
+                      Email
+                    </span>
+                    <span className="font-yi-baiti text-sm font-semibold break-all">
+                      {contactEmail}
+                    </span>
+                  </span>
+                </a>
+              </div>
+
               <h2 className="sr-only">Formulario de contacto</h2>
               <p className="font-yi-baiti text-[11px] sm:text-xs text-gray-500 text-center leading-relaxed mb-3 px-2">
-                Escribe tu mensaje aqui abajo y te contactaremos
+                O escribe tu mensaje aqui abajo y te contactaremos
               </p>
 
               {/* Submit sits above the fields, matching the reference layout.
@@ -91,18 +162,6 @@ export default function ContactoContent({ content }: Props) {
                 <p className="font-yi-baiti text-[11px] text-gray-500 text-center leading-relaxed mt-6">
                   Gracias por tu mensaje, responderemos tus dudas a la brevedad
                 </p>
-
-                <div className="mt-8 text-center">
-                  <p className="font-yi-baiti text-[11px] text-gray-500">
-                    Whatsapp
-                  </p>
-                  <a
-                    href={`mailto:${CONTACT_EMAIL}`}
-                    className="font-yi-baiti text-[11px] text-gray-500 hover:text-red-400 transition-colors"
-                  >
-                    {CONTACT_EMAIL}
-                  </a>
-                </div>
               </div>
             </form>
           </div>
